@@ -25,12 +25,14 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
       return;
     }
 
-    // Test Supabase connection first
-    const connectionTest = await testSupabaseConnection();
-    if (!connectionTest) {
-      setError('Unable to connect to authentication service. Please try again later.');
-      setLoading(false);
-      return;
+    // Test Supabase connection first (but don't block if it fails)
+    try {
+      const connectionTest = await testSupabaseConnection();
+      if (!connectionTest) {
+        console.warn('Supabase connection test failed, but continuing with auth...');
+      }
+    } catch (err) {
+      console.warn('Connection test error, but continuing with auth:', err);
     }
 
     // Add timeout to prevent infinite loading

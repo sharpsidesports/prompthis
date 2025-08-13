@@ -10,7 +10,13 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    flowType: 'pkce'
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'prompthis-web'
+    }
   }
 });
 
@@ -35,10 +41,24 @@ export const testSupabaseConnection = async () => {
     console.log('URL:', supabaseUrl);
     console.log('Key length:', supabaseAnonKey.length);
     
-    const { data, error } = await supabase.from('prompts').select('count').limit(1);
+    // Test basic connectivity first
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
     
-    if (error) {
-      console.error('Supabase connection test failed:', error);
+    const response = await fetch(`${supabaseUrl}/rest/v1/`, {
+      method: 'GET',
+      headers: {
+        'apikey': supabaseAnonKey,
+        'Authorization': `Bearer ${supabaseAnonKey}`,
+        'Content-Type': 'application/json'
+      },
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) {
+      console.error('Supabase API test failed:', response.status, response.statusText);
       return false;
     }
     
