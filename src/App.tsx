@@ -322,9 +322,9 @@ function App() {
           <div className="absolute top-2 left-2 md:top-0 md:left-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="metallic-button p-1.5 md:p-3 rounded-lg"
+              className="metallic-button p-1 md:p-3 rounded text-xs"
             >
-              {isMenuOpen ? <X className="w-4 h-4 md:w-6 md:h-6" /> : <Menu className="w-4 h-4 md:w-6 md:h-6" />}
+              {isMenuOpen ? <X className="w-3 h-3 md:w-6 md:h-6" /> : <Menu className="w-3 h-3 md:w-6 md:h-6" />}
             </button>
           </div>
 
