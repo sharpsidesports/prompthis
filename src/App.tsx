@@ -317,40 +317,40 @@ function App() {
         )}
 
         {/* Header */}
-        <header className="text-center mb-12 relative">
+        <header className="text-center mb-8 md:mb-12 relative">
           {/* Hamburger Menu */}
-          <div className="absolute top-0 left-0">
+          <div className="absolute top-2 left-2 md:top-0 md:left-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="metallic-button p-3 rounded-lg"
+              className="metallic-button p-2 md:p-3 rounded-lg"
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? <X className="w-5 h-5 md:w-6 md:h-6" /> : <Menu className="w-5 h-5 md:w-6 md:h-6" />}
             </button>
           </div>
 
           {/* User Info - Bottom Left Corner */}
-          <div className="absolute bottom-0 left-0 flex items-center space-x-3 p-4">
+          <div className="absolute bottom-0 left-0 flex items-center space-x-2 md:space-x-3 p-2 md:p-4">
             {user && (
               <>
-                <span className="text-white text-sm">
+                <span className="text-white text-xs md:text-sm">
                   {user.email}
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="metallic-secondary-button p-2 rounded-lg"
+                  className="metallic-secondary-button p-1.5 md:p-2 rounded-lg"
                   title="Logout"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3 h-3 md:w-4 md:h-4" />
                 </button>
               </>
             )}
           </div>
 
           {/* Get Plus Button - Top Right Corner */}
-          <div className="absolute top-0 right-0">
+          <div className="absolute top-2 right-2 md:top-0 md:right-0">
             <button
               onClick={() => setShowPricing(true)}
-              className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+              className="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm md:text-base font-medium transition-colors"
             >
               Get Plus
             </button>
@@ -358,10 +358,10 @@ function App() {
 
           {/* Menu Dropdown */}
           {isMenuOpen && (
-            <div className="absolute top-16 left-0 z-50 min-w-80">
-              <div className="metallic-card p-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                  <Clock className="w-5 h-5 mr-2 text-gray-600" />
+            <div className="absolute top-12 md:top-16 left-0 z-50 w-72 md:min-w-80">
+              <div className="metallic-card p-4 md:p-6">
+                <h3 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4 flex items-center">
+                  <Clock className="w-4 h-4 md:w-5 md:h-5 mr-2 text-gray-600" />
                   Prompt History
                 </h3>
                 
@@ -394,17 +394,17 @@ function App() {
             </div>
           )}
 
-          <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center justify-center mb-3 md:mb-4">
             <img 
               src={process.env.PUBLIC_URL + '/new-logo.png'} 
               alt="PromptThis Logo" 
-              className="h-12 w-12 mr-4 rounded-full object-cover shadow-lg"
+              className="h-8 w-8 md:h-12 md:w-12 mr-2 md:mr-4 rounded-full object-cover shadow-lg"
             />
-            <h1 className="text-3xl elegant-title text-white">
+            <h1 className="text-2xl md:text-3xl elegant-title text-white">
               Prompthis
             </h1>
           </div>
-          <p className="text-xl text-gray-200 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto px-4">
             Better AI prompts. Better AI answers.
           </p>
         </header>
