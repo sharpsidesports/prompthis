@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, testSupabaseConnection } from '../lib/supabase';
 import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
 
 interface AuthProps {
@@ -25,6 +25,14 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
       return;
     }
 
+    // Test Supabase connection first
+    const connectionTest = await testSupabaseConnection();
+    if (!connectionTest) {
+      setError('Unable to connect to authentication service. Please try again later.');
+      setLoading(false);
+      return;
+    }
+
     // Add timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       setLoading(false);
@@ -34,6 +42,8 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
     try {
       if (isSignUp) {
         console.log('Attempting signup with email:', email);
+        console.log('Current origin:', window.location.origin);
+        
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
