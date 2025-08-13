@@ -346,8 +346,16 @@ function App() {
             )}
           </div>
 
-          {/* Get Plus Button - Top Right Corner */}
-          <div className="absolute top-2 right-2 md:top-0 md:right-0">
+          {/* Top Right Buttons */}
+          <div className="absolute top-2 right-2 md:top-0 md:right-0 flex items-center space-x-2 md:space-x-3">
+            {!user && (
+              <button
+                onClick={() => setShowAuth(true)}
+                className="bg-gray-700 hover:bg-gray-800 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg text-xs md:text-base font-medium transition-colors"
+              >
+                Sign In
+              </button>
+            )}
             <button
               onClick={() => setShowPricing(true)}
               className="bg-gray-800 hover:bg-gray-900 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg text-xs md:text-base font-medium transition-colors"
