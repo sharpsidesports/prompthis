@@ -1,0 +1,191 @@
+import React, { useState } from 'react';
+import { supabase } from '../lib/supabase';
+import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
+
+interface AuthProps {
+  onAuthSuccess: () => void;
+}
+
+export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+      setError('Request timed out. Please try again.');
+    }, 10000); // 10 second timeout
+
+    try {
+      if (isSignUp) {
+        console.log('Attempting signup with email:', email);
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback`
+          }
+        });
+        
+        console.log('Signup response:', { data, error });
+        
+        if (error) {
+          throw error;
+        }
+        
+        if (data.user && !data.session) {
+          // Email confirmation required
+          setError('Account created successfully! Please check your email for a confirmation link. If you don\'t see it, check your spam folder. You can also try signing in directly.');
+          setLoading(false);
+          return;
+        }
+        
+        if (data.session) {
+          // User is automatically signed in (email confirmation disabled)
+          onAuthSuccess();
+        }
+        
+        // If neither condition is met, try to sign in directly
+        if (data.user) {
+          console.log('Attempting direct signin after signup...');
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+          
+          if (signInError) {
+            setError('Account created but sign-in failed. Please try signing in manually.');
+          } else {
+            onAuthSuccess();
+          }
+        }
+      } else {
+        console.log('Attempting signin with email:', email);
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        console.log('Signin response:', { data, error });
+        if (error) throw error;
+        onAuthSuccess();
+      }
+    } catch (error) {
+      console.error('Auth error:', error);
+      setError(error instanceof Error ? error.message : 'An error occurred');
+    } finally {
+      clearTimeout(timeoutId);
+      setLoading(false);
+    }
+  };
+
+    return (
+    <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md border border-gray-200">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          {isSignUp ? 'Create Account' : 'Welcome Back'}
+        </h1>
+        <p className="text-gray-600">
+          {isSignUp 
+            ? 'Sign up to save your prompts and access your history' 
+            : 'Sign in to continue using Prompthis'
+          }
+        </p>
+      </div>
+
+      <form onSubmit={handleAuth} className="space-y-6">
+        <div>
+          <label className="block text-gray-700 text-sm mb-2">Email</label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className="block text-gray-700 text-sm mb-2">Password</label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+        </div>
+
+        {error && (
+          <div className={`border rounded-lg p-3 ${
+            error.includes('Account created successfully') 
+              ? 'bg-gray-50 border-gray-200' 
+              : 'bg-red-50 border-red-200'
+          }`}>
+            <p className={`text-sm ${
+              error.includes('Account created successfully') 
+                ? 'text-gray-700' 
+                : 'text-red-700'
+            }`}>{error}</p>
+            {error.includes('Account created successfully') && (
+              <div className="mt-3 pt-3 border-t border-gray-200">
+                <p className="text-xs text-gray-600 mb-2">
+                  💡 Tip: You can try signing in directly with your email and password, or check your email for the confirmation link.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setIsSignUp(false)}
+                  className="text-xs text-gray-600 hover:text-gray-800 underline"
+                >
+                  Try Sign In Instead
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-gray-800 text-white py-3 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+        >
+          {loading ? (
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+          ) : (
+            <>
+              {isSignUp ? <UserPlus className="w-5 h-5 mr-2" /> : <LogIn className="w-5 h-5 mr-2" />}
+              {isSignUp ? 'Sign Up' : 'Sign In'}
+            </>
+          )}
+        </button>
+      </form>
+
+      <div className="mt-6 text-center">
+        <button
+          onClick={() => setIsSignUp(!isSignUp)}
+          className="text-gray-600 hover:text-gray-800 text-sm"
+        >
+          {isSignUp 
+            ? 'Already have an account? Sign In' 
+            : "Don't have an account? Sign Up"
+          }
+        </button>
+      </div>
+    </div>
+  );
+}; 
