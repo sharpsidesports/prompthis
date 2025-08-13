@@ -418,7 +418,7 @@ function App() {
                 <Wand2 className="w-6 h-6 mr-2 text-gray-600" />
                 Prompt Templates
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-4">
+              <div className="grid grid-cols-2 gap-3 md:gap-4">
                 {promptTemplates.map((template) => (
                   <div
                     key={template.id}
