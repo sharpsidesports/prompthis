@@ -14,7 +14,7 @@ const pricingPlans = [
     price: '$3.99',
     period: '/month',
     description: 'Enhanced prompt generation and features',
-    productId: 'prod_Sox7tmd6LpRQNI',
+    productId: 'prod_SrBrU9a43Ry72h',
     features: [
       'Unlimited prompts with advanced reasoning',
       'Faster response times',
@@ -31,7 +31,7 @@ const pricingPlans = [
     price: '$14.99',
     period: '/month',
     description: 'Ultimate prompt creation experience',
-    productId: 'prod_Sox8XomCyYQ5TZ',
+    productId: 'prod_SrBrnHx5E3KfSZ',
     features: [
       'Unlimited prompts with pro reasoning',
       'The fastest response times',

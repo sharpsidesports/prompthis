@@ -6,6 +6,43 @@ import type { User } from '@supabase/supabase-js';
 import { Auth } from './components/Auth';
 import { Pricing } from './components/Pricing';
 
+// Add error boundary
+class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
+  constructor(props: {children: React.ReactNode}) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: any) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: any, errorInfo: any) {
+    console.error('Error caught by boundary:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+          <div className="text-center text-white">
+            <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+            <p className="mb-4">The app encountered an error. Please refresh the page.</p>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="bg-blue-600 px-4 py-2 rounded"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 interface PromptTemplate {
   id: string;
   name: string;
@@ -236,15 +273,16 @@ function App() {
   };
 
   return (
-    <div className="metallic-bg">
-      {/* Authentication Modal */}
-      {showAuth && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="relative">
-            <Auth onAuthSuccess={handleAuthSuccess} />
+    <ErrorBoundary>
+      <div className="metallic-bg">
+        {/* Authentication Modal */}
+        {showAuth && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="relative">
+              <Auth onAuthSuccess={handleAuthSuccess} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Pricing Modal */}
       {showPricing && (
@@ -559,10 +597,11 @@ function App() {
               </button>
             </div>
           </div>
+                  </div>
         </div>
       </div>
-    </div>
-  );
-}
+      </ErrorBoundary>
+    );
+  }
 
 export default App; 
