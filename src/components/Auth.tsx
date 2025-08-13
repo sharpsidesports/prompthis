@@ -18,6 +18,13 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
     setLoading(true);
     setError(null);
 
+    // Check if Supabase is properly configured
+    if (!process.env.REACT_APP_SUPABASE_URL || !process.env.REACT_APP_SUPABASE_ANON_KEY) {
+      setError('Supabase configuration error. Please check environment variables.');
+      setLoading(false);
+      return;
+    }
+
     // Add timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       setLoading(false);
@@ -79,7 +86,20 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
       }
     } catch (error) {
       console.error('Auth error:', error);
-      setError(error instanceof Error ? error.message : 'An error occurred');
+      console.error('Supabase URL:', process.env.REACT_APP_SUPABASE_URL);
+      console.error('Supabase Anon Key length:', process.env.REACT_APP_SUPABASE_ANON_KEY?.length);
+      
+      if (error instanceof Error) {
+        if (error.message.includes('fetch')) {
+          setError('Network error. Please check your internet connection and try again.');
+        } else if (error.message.includes('timeout')) {
+          setError('Connection timeout. Please try again.');
+        } else {
+          setError(error.message);
+        }
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
     } finally {
       clearTimeout(timeoutId);
       setLoading(false);
