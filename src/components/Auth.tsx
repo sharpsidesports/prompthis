@@ -55,7 +55,7 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         
         if (data.user && !data.session) {
           // Email confirmation required
-          setError('Account created successfully! Please check your email for a confirmation link. If you don\'t see it, check your spam folder. You can also try signing in directly.');
+          setError('Please check your email for a confirmation link and click it to activate your account. Then try signing in again.');
           setLoading(false);
           return;
         }
@@ -85,6 +85,7 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         
         // Try a more direct approach with better error handling
         try {
+          console.log('Attempting to sign in with existing credentials...');
           const { data, error } = await supabase.auth.signInWithPassword({
             email,
             password,
@@ -95,29 +96,11 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
           if (error) {
             console.error('Signin error details:', error);
             if (error.message.includes('Invalid login credentials')) {
-              // Try to create account automatically
-              console.log('Invalid credentials, trying to create account...');
-              const { data: signupData, error: signupError } = await supabase.auth.signUp({
-                email,
-                password,
-              });
-              
-              if (signupError) {
-                setError('Account creation failed. Please try again.');
-                return;
-              }
-              
-              if (signupData?.user) {
-                console.log('Account created and signed in successfully');
-                onAuthSuccess();
-                return;
-              }
-              
               setError('Invalid email or password. Please try again.');
+              return;
             } else {
               throw error;
             }
-            return;
           }
           
           if (data?.user) {
