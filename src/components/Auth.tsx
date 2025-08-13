@@ -25,21 +25,14 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
       return;
     }
 
-    // Test Supabase connection first (but don't block if it fails)
-    try {
-      const connectionTest = await testSupabaseConnection();
-      if (!connectionTest) {
-        console.warn('Supabase connection test failed, but continuing with auth...');
-      }
-    } catch (err) {
-      console.warn('Connection test error, but continuing with auth:', err);
-    }
+    // Skip connection test for now to avoid timeout issues
+    console.log('Skipping connection test, proceeding directly with auth...');
 
     // Add timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
       setLoading(false);
       setError('Request timed out. Please try again.');
-    }, 10000); // 10 second timeout
+    }, 5000); // 5 second timeout
 
     try {
       if (isSignUp) {
@@ -88,13 +81,27 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         }
       } else {
         console.log('Attempting signin with email:', email);
+        console.log('Current origin:', window.location.origin);
+        
+        // Try a more direct approach
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
+        
         console.log('Signin response:', { data, error });
-        if (error) throw error;
-        onAuthSuccess();
+        
+        if (error) {
+          console.error('Signin error details:', error);
+          throw error;
+        }
+        
+        if (data?.user) {
+          console.log('Signin successful:', data.user.email);
+          onAuthSuccess();
+        } else {
+          throw new Error('No user data received');
+        }
       }
     } catch (error) {
       console.error('Auth error:', error);
