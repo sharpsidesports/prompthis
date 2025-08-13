@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Check } from 'lucide-react';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { simulateCheckout } from '../api/stripe';
+import { loadStripe } from '@stripe/stripe-js';
 
 interface PricingProps {
   onClose: () => void;
@@ -52,12 +51,40 @@ export const Pricing: React.FC<PricingProps> = ({ onClose }) => {
     try {
       console.log(`Redirecting to Stripe checkout for ${planId} with product ID: ${productId}`);
       
-      // For now, we'll simulate the checkout process
-      // In production, you'd create a checkout session with your backend
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Load Stripe
+      const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY!);
       
-      alert(`Successfully subscribed to ${planId}! This is a demo - in production, you'd integrate with Stripe checkout using product ID: ${productId}`);
-      onClose();
+      if (!stripe) {
+        throw new Error('Stripe failed to load');
+      }
+
+      // Create checkout session
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId: productId,
+          planId: planId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session');
+      }
+
+      const session = await response.json();
+      
+      // Redirect to Stripe checkout
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+      
     } catch (error) {
       console.error('Payment error:', error);
       alert('Payment failed. Please try again.');
