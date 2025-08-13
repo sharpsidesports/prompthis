@@ -83,24 +83,56 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
         console.log('Attempting signin with email:', email);
         console.log('Current origin:', window.location.origin);
         
-        // Try a more direct approach
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        
-        console.log('Signin response:', { data, error });
-        
-        if (error) {
-          console.error('Signin error details:', error);
-          throw error;
-        }
-        
-        if (data?.user) {
-          console.log('Signin successful:', data.user.email);
-          onAuthSuccess();
-        } else {
-          throw new Error('No user data received');
+        // Try a more direct approach with better error handling
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+          
+          console.log('Signin response:', { data, error });
+          
+          if (error) {
+            console.error('Signin error details:', error);
+            if (error.message.includes('Invalid login credentials')) {
+              // Try to create account automatically
+              console.log('Invalid credentials, trying to create account...');
+              const { data: signupData, error: signupError } = await supabase.auth.signUp({
+                email,
+                password,
+              });
+              
+              if (signupError) {
+                setError('Account creation failed. Please try again.');
+                return;
+              }
+              
+              if (signupData?.user) {
+                console.log('Account created and signed in successfully');
+                onAuthSuccess();
+                return;
+              }
+              
+              setError('Invalid email or password. Please try again.');
+            } else {
+              throw error;
+            }
+            return;
+          }
+          
+          if (data?.user) {
+            console.log('Signin successful:', data.user.email);
+            onAuthSuccess();
+          } else {
+            setError('Authentication failed. Please try again.');
+          }
+        } catch (authError) {
+          console.error('Auth error:', authError);
+          if (authError instanceof Error) {
+            setError(authError.message);
+          } else {
+            setError('Authentication failed. Please try again.');
+          }
         }
       }
     } catch (error) {
@@ -137,6 +169,11 @@ export const Auth: React.FC<AuthProps> = ({ onAuthSuccess }) => {
             : 'Sign in to continue using Prompthis'
           }
         </p>
+        {!isSignUp && (
+          <p className="text-sm text-gray-500 mt-2">
+            Don't have an account? The system will create one for you automatically.
+          </p>
+        )}
       </div>
 
       <form onSubmit={handleAuth} className="space-y-6">
