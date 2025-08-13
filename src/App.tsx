@@ -322,9 +322,9 @@ function App() {
           <div className="absolute top-2 left-2 md:top-0 md:left-0">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="metallic-button p-2 md:p-3 rounded-lg"
+              className="metallic-button p-1.5 md:p-3 rounded-lg"
             >
-              {isMenuOpen ? <X className="w-5 h-5 md:w-6 md:h-6" /> : <Menu className="w-5 h-5 md:w-6 md:h-6" />}
+              {isMenuOpen ? <X className="w-4 h-4 md:w-6 md:h-6" /> : <Menu className="w-4 h-4 md:w-6 md:h-6" />}
             </button>
           </div>
 
@@ -350,7 +350,7 @@ function App() {
           <div className="absolute top-2 right-2 md:top-0 md:right-0">
             <button
               onClick={() => setShowPricing(true)}
-              className="bg-gray-800 hover:bg-gray-900 text-white px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-sm md:text-base font-medium transition-colors"
+              className="bg-gray-800 hover:bg-gray-900 text-white px-2 py-1 md:px-4 md:py-2 rounded-lg text-xs md:text-base font-medium transition-colors"
             >
               Get Plus
             </button>
@@ -394,13 +394,13 @@ function App() {
             </div>
           )}
 
-          <div className="flex items-center justify-center mb-3 md:mb-4">
+          <div className="flex items-center justify-center mb-3 md:mb-4 pt-8 md:pt-12">
             <img 
               src={process.env.PUBLIC_URL + '/new-logo.png'} 
               alt="PromptThis Logo" 
-              className="h-8 w-8 md:h-12 md:w-12 mr-2 md:mr-4 rounded-full object-cover shadow-lg"
+              className="h-6 w-6 md:h-10 md:w-10 mr-2 md:mr-3 rounded-full object-cover shadow-lg"
             />
-            <h1 className="text-2xl md:text-3xl elegant-title text-white">
+            <h1 className="text-xl md:text-2xl elegant-title text-white">
               Prompthis
             </h1>
           </div>
