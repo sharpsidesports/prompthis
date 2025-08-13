@@ -418,18 +418,18 @@ function App() {
                 <Wand2 className="w-6 h-6 mr-2 text-gray-600" />
                 Prompt Templates
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-4">
                 {promptTemplates.map((template) => (
                   <div
                     key={template.id}
                     onClick={() => handleTemplateSelect(template)}
-                    className={`metallic-template p-4 cursor-pointer ${
+                    className={`metallic-template p-3 md:p-4 cursor-pointer ${
                       selectedTemplate?.id === template.id ? 'selected' : ''
                     }`}
                   >
-                    <h3 className="font-semibold text-gray-800 mb-1">{template.name}</h3>
-                    <p className="text-gray-600 text-sm mb-2">{template.description}</p>
-                    <span className="inline-block px-2 py-1 bg-gray-100 rounded text-xs text-gray-700">
+                    <h3 className="font-semibold text-gray-800 mb-1 text-sm md:text-base">{template.name}</h3>
+                    <p className="text-gray-600 text-xs md:text-sm mb-2">{template.description}</p>
+                    <span className="inline-block px-1.5 py-0.5 md:px-2 md:py-1 bg-gray-100 rounded text-xs text-gray-700">
                       {template.category}
                     </span>
                   </div>
