@@ -1,113 +1,116 @@
-# WriteMyGPT
+# Prompthis - Better ChatGPT Prompts
 
-A modern, user-friendly website that helps people create better ChatGPT prompts. Built with React, TypeScript, and Tailwind CSS.
+A modern web application that helps users create better ChatGPT prompts using AI-powered generation.
 
-## Features
+## 🚀 Quick Start
 
-- **Smart Templates**: Pre-built prompt templates for different use cases (Content Writing, Programming, Creative Writing, Business Analysis, Education, Problem Solving)
-- **Customizable Parameters**: Dynamic parameter replacement for personalized prompts
-- **Custom Prompt Input**: Write your own prompts from scratch
-- **Copy & Download**: Easy export of generated prompts
-- **Beautiful UI**: Modern glass-morphism design with smooth animations
-- **Responsive Design**: Works perfectly on desktop and mobile devices
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Set up environment variables (see below)
+4. Start development server: `npm start`
 
-## Getting Started
+## 🔐 Environment Variables
 
-### Prerequisites
+**⚠️ SECURITY WARNING: Never commit API keys to Git!**
 
-- Node.js (version 14 or higher)
-- npm or yarn
-- OpenAI API key
+Create a `.env` file in the root directory with the following variables:
 
-### Installation
+```env
+# OpenAI API Configuration
+REACT_APP_OPENAI_API_KEY=your_openai_api_key_here
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd writemygpt
+# Supabase Configuration
+REACT_APP_SUPABASE_URL=your_supabase_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Stripe Configuration
+REACT_APP_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+REACT_APP_STRIPE_SECRET_KEY=your_stripe_secret_key
 ```
 
-2. Install dependencies:
+### 🔒 Security Best Practices
+
+1. **Never share API keys publicly**
+2. **Use environment variables for all sensitive data**
+3. **Rotate API keys regularly**
+4. **Monitor API usage for unusual activity**
+5. **Use different keys for development and production**
+6. **Keep your `.env` file in `.gitignore`**
+
+## 🛠️ Development
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
+- OpenAI API key
+- Supabase account
+- Stripe account (for payments)
+
+### Installation
 ```bash
 npm install
 ```
 
-3. Set up your OpenAI API key:
-   - Copy `env.example` to `.env`
-   - Replace `your_openai_api_key_here` with your actual OpenAI API key
-   - Get your API key from [OpenAI Platform](https://platform.openai.com/api-keys)
-
-4. Start the development server:
+### Running the App
 ```bash
 npm start
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The app will be available at `http://localhost:3000`
 
-## Usage
+### Building for Production
+```bash
+npm run build
+```
 
-1. **Choose a Template**: Select from one of the pre-built prompt templates
-2. **Customize Parameters**: Fill in the dynamic parameters for your specific needs
-3. **Or Write Custom**: Use the custom prompt input to write your own prompt
-4. **Generate with AI**: Click the "Generate Prompt with AI" button to create an enhanced prompt using OpenAI
-5. **Export**: Copy to clipboard or download the generated prompt
+## 🌐 Deployment
 
-## OpenAI Integration
+The app is deployed on Vercel. Make sure to set all environment variables in your Vercel dashboard:
 
-This application uses OpenAI's GPT-3.5-turbo model to enhance and improve your prompts. The AI will:
+1. Go to your Vercel project settings
+2. Navigate to Environment Variables
+3. Add all required variables from the `.env` file
 
-- **Enhance template-based prompts** with additional context and details
-- **Improve custom prompts** by making them more specific and actionable
-- **Add professional language** and clear instructions
-- **Ensure completeness** and effectiveness for ChatGPT
-
-## Available Templates
-
-- **Content Writer**: Create engaging blog posts and articles
-- **Code Assistant**: Get help with programming and debugging
-- **Creative Storyteller**: Generate creative stories and narratives
-- **Business Analyst**: Analyze business problems and provide insights
-- **Learning Tutor**: Get educational explanations and tutorials
-- **Problem Solver**: Break down complex problems into solutions
-
-## Technologies Used
-
-- **React 18**: Modern React with hooks
-- **TypeScript**: Type-safe development
-- **Tailwind CSS**: Utility-first CSS framework
-- **Lucide React**: Beautiful icons
-- **Create React App**: Zero-configuration build tool
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 src/
-├── App.tsx          # Main application component
-├── index.tsx        # React entry point
-└── index.css        # Global styles and Tailwind imports
+├── components/     # React components
+├── api/           # API integrations
+├── lib/           # Utility libraries
+└── App.tsx        # Main application component
 
-public/
-└── index.html       # HTML template
-
-tailwind.config.js   # Tailwind CSS configuration
-tsconfig.json        # TypeScript configuration
-package.json         # Dependencies and scripts
+api/               # Vercel serverless functions
+public/            # Static assets
 ```
 
-## Contributing
+## 🔧 Features
+
+- **AI-Powered Prompt Generation**: Uses OpenAI's GPT-3.5-turbo
+- **User Authentication**: Supabase email/password auth
+- **Prompt History**: Save and manage your generated prompts
+- **Subscription Plans**: Stripe integration for Plus/Platinum plans
+- **Responsive Design**: Works on desktop and mobile
+- **Modern UI**: Clean, professional interface
+
+## 📝 Usage
+
+1. **Free Users**: 1 prompt before login, then 4 prompts per day
+2. **Plus Plan ($3.99/month)**: Unlimited prompts with advanced reasoning
+3. **Platinum Plan ($14.99/month)**: Unlimited prompts with pro reasoning
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License.
+This project is private and proprietary.
 
-## Acknowledgments
+## 🆘 Support
 
-- Built with modern web technologies for optimal user experience
-- Inspired by the need for better ChatGPT prompt creation tools
-- Icons provided by Lucide React 
+For support, please contact the development team. 
