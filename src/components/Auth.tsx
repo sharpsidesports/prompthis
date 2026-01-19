@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase, testSupabaseConnection } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { Mail, Lock, LogIn, UserPlus } from 'lucide-react';
 
 interface AuthProps {
