@@ -15,8 +15,16 @@ export interface PromptResponse {
 
 export const generatePromptWithAI = async (request: PromptRequest): Promise<PromptResponse> => {
   try {
+    // Debug: Check if API key is loaded (only log first few characters for security)
+    const keyPrefix = OPENAI_API_KEY ? OPENAI_API_KEY.substring(0, 10) + '...' : 'MISSING';
+    console.log('OpenAI API Key status:', keyPrefix);
+    
     if (!OPENAI_API_KEY) {
-      throw new Error('OpenAI API key not found. Please check your environment variables.');
+      throw new Error('OpenAI API key not found. Please check your environment variables in Vercel settings.');
+    }
+    
+    if (OPENAI_API_KEY.length < 20) {
+      throw new Error('OpenAI API key appears to be invalid. Please check your environment variables.');
     }
 
     // Build the prompt for the AI
@@ -75,7 +83,18 @@ export const generatePromptWithAI = async (request: PromptRequest): Promise<Prom
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
+      const errorMessage = errorData.error?.message || `HTTP error! status: ${response.status}`;
+      
+      // Provide more specific error messages
+      if (response.status === 401) {
+        throw new Error('Invalid API key. Please check your OpenAI API key in Vercel environment variables.');
+      } else if (response.status === 429) {
+        throw new Error('Rate limit exceeded. Please try again in a moment.');
+      } else if (response.status === 500) {
+        throw new Error('OpenAI server error. Please try again later.');
+      } else {
+        throw new Error(errorMessage);
+      }
     }
 
     const data = await response.json();
@@ -86,9 +105,18 @@ export const generatePromptWithAI = async (request: PromptRequest): Promise<Prom
     };
   } catch (error) {
     console.error('OpenAI API Error:', error);
+    
+    // Handle network errors
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      return {
+        generatedPrompt: '',
+        error: 'Network error. Please check your internet connection and try again.'
+      };
+    }
+    
     return {
       generatedPrompt: '',
-      error: error instanceof Error ? error.message : 'Failed to generate prompt'
+      error: error instanceof Error ? error.message : 'Failed to generate prompt. Please try again.'
     };
   }
 }; 
