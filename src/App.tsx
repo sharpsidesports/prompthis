@@ -5,6 +5,7 @@ import { supabase } from './lib/supabase';
 import type { User } from '@supabase/supabase-js';
 import { Auth } from './components/Auth';
 import { Pricing } from './components/Pricing';
+import { Analytics } from '@vercel/analytics/react';
 
 // Add error boundary
 class ErrorBoundary extends React.Component<{children: React.ReactNode}, {hasError: boolean, error: any}> {
@@ -608,6 +609,7 @@ function App() {
                   </div>
         </div>
       </div>
+      <Analytics />
       </ErrorBoundary>
     );
   }
